@@ -3,11 +3,14 @@
 #pragma once
 
 #include "ShootingGameCode.h"
+#include "FindSessionsCallbackProxy.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Engine/DataTable.h"
 #include "Weapon.h"
 #include "Engine/GameInstance.h"
 #include "ShootingGameInstance.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSessionSearchResultDelegate, bool, isFind, const TArray<FBlueprintSessionResult>&, SearchResults);
 
 /**
  * 
@@ -145,4 +148,13 @@ public:
 
 	/** virtual function to allow custom GameInstances an opportunity to do cleanup when shutting down */
 	virtual void Shutdown() override;
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnUpdateSearchResult(const TArray<FBlueprintSessionResult>& SessionResults);
+
+	void OnUpdateSearchResult_Implementation(const TArray<FBlueprintSessionResult>& SessionResults);
+
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable)
+	FSessionSearchResultDelegate Fuc_Dele_SearchResult;
 };

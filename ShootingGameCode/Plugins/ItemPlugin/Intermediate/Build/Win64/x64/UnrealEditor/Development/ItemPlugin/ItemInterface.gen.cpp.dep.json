@@ -1,13 +1,13 @@
 {
     "Version": "1.2",
     "Data": {
-        "Source": "d:\\unrealproject\\vr14\\shootinggamecode\\plugins\\itemplugin\\intermediate\\build\\win64\\unrealeditor\\inc\\itemplugin\\uht\\iteminterface.gen.cpp",
+        "Source": "d:\\unrealproject\\vr12\\shootinggamecode\\plugins\\itemplugin\\intermediate\\build\\win64\\unrealeditor\\inc\\itemplugin\\uht\\iteminterface.gen.cpp",
         "ProvidedModule": "",
-        "PCH": "d:\\unrealproject\\vr14\\shootinggamecode\\intermediate\\build\\win64\\x64\\shootinggamecodeeditor\\development\\engine\\sharedpch.engine.shadowerrors.inclorderunreal5_1.h.pch",
+        "PCH": "d:\\unrealproject\\vr12\\shootinggamecode\\intermediate\\build\\win64\\x64\\shootinggamecodeeditor\\development\\engine\\sharedpch.engine.shadowerrors.inclorderunreal5_1.h.pch",
         "Includes": [
-            "d:\\unrealproject\\vr14\\shootinggamecode\\plugins\\itemplugin\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\itemplugin\\definitions.itemplugin.h",
-            "d:\\unrealproject\\vr14\\shootinggamecode\\plugins\\itemplugin\\source\\itemplugin\\public\\iteminterface.h",
-            "d:\\unrealproject\\vr14\\shootinggamecode\\plugins\\itemplugin\\intermediate\\build\\win64\\unrealeditor\\inc\\itemplugin\\uht\\iteminterface.generated.h"
+            "d:\\unrealproject\\vr12\\shootinggamecode\\plugins\\itemplugin\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\itemplugin\\definitions.itemplugin.h",
+            "d:\\unrealproject\\vr12\\shootinggamecode\\plugins\\itemplugin\\source\\itemplugin\\public\\iteminterface.h",
+            "d:\\unrealproject\\vr12\\shootinggamecode\\plugins\\itemplugin\\intermediate\\build\\win64\\unrealeditor\\inc\\itemplugin\\uht\\iteminterface.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

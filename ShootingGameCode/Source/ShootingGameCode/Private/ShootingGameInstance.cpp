@@ -200,6 +200,9 @@ void UShootingGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 			// If we have found at least 1 session, we just going to debug them. You could add them to a list of UMG Widgets, like it is done in the BP version!
 			if (SessionSearch->SearchResults.Num() > 0)
 			{
+				TArray<FBlueprintSessionResult> bpSessionResult;
+				bpSessionResult.SetNum(SessionSearch->SearchResults.Num());
+
 				// "SessionSearch->SearchResults" is an Array that contains all the information. You can access the Session in this and get a lot of information.
 				// This can be customized later on with your own classes to add more information that can be set and displayed
 				for (int32 SearchIdx = 0; SearchIdx < SessionSearch->SearchResults.Num(); SearchIdx++)
@@ -207,7 +210,16 @@ void UShootingGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 					// OwningUserName is just the SessionName for now. I guess you can create your own Host Settings class and GameSession Class and add a proper GameServer Name here.
 					// This is something you can't do in Blueprint for example!
 					GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Session Number: %d | Sessionname: %s "), SearchIdx + 1, *(SessionSearch->SearchResults[SearchIdx].Session.OwningUserName)));
+
+					bpSessionResult[SearchIdx].OnlineResult = SessionSearch->SearchResults[SearchIdx];
 				}
+
+				
+
+				OnUpdateSearchResult(bpSessionResult);
+
+				if (Fuc_Dele_SearchResult.IsBound())
+					Fuc_Dele_SearchResult.Broadcast(true, bpSessionResult);
 			}
 		}
 	}
@@ -545,4 +557,8 @@ void UShootingGameInstance::Shutdown()
 
 	// Perform any other cleanup if needed
 	Super::Shutdown();
+}
+
+void UShootingGameInstance::OnUpdateSearchResult_Implementation(const TArray<FBlueprintSessionResult>& SessionResults)
+{
 }
