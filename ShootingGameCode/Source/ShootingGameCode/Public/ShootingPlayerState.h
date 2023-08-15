@@ -55,6 +55,9 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_Mag)
 	int Mag;
 
+	UPROPERTY(ReplicatedUsing = OnRep_Mag)
+	int Kill;
+
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable)
 	FDele_UpdateHp_TwoParams Fuc_Dele_UpdateHp;
 

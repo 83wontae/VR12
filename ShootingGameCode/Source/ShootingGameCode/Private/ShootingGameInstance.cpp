@@ -2,6 +2,7 @@
 
 
 #include "ShootingGameInstance.h"
+#include "ShootingPlayerState.h"
 
 UShootingGameInstance::UShootingGameInstance(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -471,4 +472,36 @@ void UShootingGameInstance::Shutdown()
 
 void UShootingGameInstance::OnUpdateSearchResult_Implementation(const TArray<FBlueprintSessionResult>& SessionResults)
 {
+}
+
+void UShootingGameInstance::SortTest()
+{
+	TArray<AShootingPlayerState*> arrPS;
+
+	AShootingPlayerState* playerState1 = CreateDefaultSubobject<AShootingPlayerState>(TEXT("PlayerState1"));
+	playerState1->Kill = 4;
+	arrPS.Push(playerState1);
+
+	AShootingPlayerState* playerState2 = CreateDefaultSubobject<AShootingPlayerState>(TEXT("PlayerState2"));
+	playerState2->Kill = 1;
+	arrPS.Push(playerState2);
+
+	AShootingPlayerState* playerState3 = CreateDefaultSubobject<AShootingPlayerState>(TEXT("PlayerState3"));
+	playerState3->Kill = 10;
+	arrPS.Push(playerState3);
+
+	AShootingPlayerState* playerState4 = CreateDefaultSubobject<AShootingPlayerState>(TEXT("PlayerState4"));
+	playerState4->Kill = 7;
+	arrPS.Push(playerState4);
+
+	arrPS.Sort([](const AShootingPlayerState& A, const AShootingPlayerState& B) {
+		return A.Kill < B.Kill;
+	});
+
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("Sort Test"));
+
+	for (AShootingPlayerState* iter : arrPS)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Sort %s Kill : %d"), *iter->GetFName().ToString(), iter->Kill));
+	}
 }

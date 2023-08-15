@@ -228,5 +228,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AGrenade> GrenadeClass;
+
+public:
+	void SortTest();
 };
 

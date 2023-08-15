@@ -158,4 +158,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable)
 	FSessionSearchResultDelegate Fuc_Dele_SearchResult;
+
+
+	void SortTest();
 };

@@ -484,6 +484,31 @@ bool AShootingGameCodeCharacter::IsEquip()
 	return IsValid(EquipWeapon);
 }
 
+void AShootingGameCodeCharacter::SortTest()
+{
+	TArray<AActor*> arrActors;
+	TArray<AShootingPlayerState*> arrPS;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AShootingPlayerState::StaticClass(), arrActors);
+	for (AActor* iter : arrActors)
+	{
+		AShootingPlayerState* Temp = Cast<AShootingPlayerState>(iter);
+		Temp->Kill = FMath::RandRange(0, 100);
+		arrPS.Push(Temp);
+	}
+
+	arrPS.Sort([](const AShootingPlayerState& A, const AShootingPlayerState& B) {
+		return A.Kill > B.Kill;
+		});
+
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("Sort Test"));
+
+	for (AShootingPlayerState* iter : arrPS)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Sort %s Kill : %d"), *iter->GetFName().ToString(), iter->Kill));
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -576,6 +601,9 @@ void AShootingGameCodeCharacter::TriggerRelease(const FInputActionValue& Value)
 
 void AShootingGameCodeCharacter::Reload(const FInputActionValue& Value)
 {
+	SortTest();
+	return;
+
 	ReqReload();
 }
 
