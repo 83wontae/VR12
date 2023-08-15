@@ -11,6 +11,7 @@
 #include "ShootingGameInstance.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSessionSearchResultDelegate, bool, isFind, const TArray<FBlueprintSessionResult>&, SearchResults);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSessionSearchResultExec, bool, isFind, const TArray<FBlueprintSessionResult>&, SearchResults);
 
 /**
  * 
@@ -135,13 +136,13 @@ public:
 	FString CombineIPAndPort(const FString& IPAddress, int32 Port);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
-	void StartOnlineGame();
+	void StartOnlineGame(bool bIsLAN, int MaxNumPlayers);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void FindOnlineGames();
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
-	void JoinOnlineGame();
+	void JoinOnlineGame(FBlueprintSessionResult SessionResult);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void DestroySessionAndLeaveGame();

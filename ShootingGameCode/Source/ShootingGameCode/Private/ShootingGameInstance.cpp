@@ -343,7 +343,7 @@ FString UShootingGameInstance::CombineIPAndPort(const FString& IPAddress, int32 
 	return FString::Printf(TEXT("%s:%d"), *IPAddress, Port);
 }
 
-void UShootingGameInstance::StartOnlineGame()
+void UShootingGameInstance::StartOnlineGame(bool bIsLAN, int MaxNumPlayers)
 {
 	// Creating a local player where we can get the UserID from
 	ULocalPlayer* const LocalPlayer = GetFirstGamePlayer();
@@ -364,43 +364,10 @@ void UShootingGameInstance::StartOnlineGame()
 
 	// Call our custom HostSession function. GameSessionName is a GameInstance variable
 	HostSession(UniqueNetId, NAME_GameSession, true, false, 4);
-
-	/*
-	// Get the Online Subsystem
-	IOnlineSubsystem* OnlineSub = IOnlineSubsystem::Get();
-
-	if (OnlineSub)
-	{
-		// Get the Session Interface
-		IOnlineSessionPtr Sessions = OnlineSub->GetSessionInterface();
-
-		if (Sessions.IsValid())
-		{
-			// Create a unique identifier for the user
-			TSharedPtr<const FUniqueNetId> UserId = OnlineSub->GetIdentityInterface()->GetUniquePlayerId(0);
-
-			if (UserId.IsValid())
-			{
-				// Set up the session settings
-				FOnlineSessionSettings settings;
-				settings.bIsLANMatch = true;
-				settings.NumPublicConnections = 4;
-
-				// Delegate for session creation completion
-				OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &UShootingGameInstance::OnCreateSessionComplete);
-				Sessions->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
-
-				// Create the session
-				Sessions->CreateSession(*UserId, FName("MySession"), settings);
-			}
-		}
-	}
-	*/
 }
 
 void UShootingGameInstance::FindOnlineGames()
 {
-	/*
 	// Creating a local player where we can get the UserID from
 	ULocalPlayer* const LocalPlayer = GetFirstGamePlayer();
 	if (LocalPlayer == nullptr)
@@ -419,41 +386,9 @@ void UShootingGameInstance::FindOnlineGames()
 		return;
 
 	FindSessions(UniqueNetId, true, true);
-	*/
-
-	// Get the Online Subsystem
-	IOnlineSubsystem* OnlineSub = IOnlineSubsystem::Get();
-
-	if (OnlineSub)
-	{
-		// Get the Session Interface
-		IOnlineSessionPtr Sessions = OnlineSub->GetSessionInterface();
-
-		if (Sessions.IsValid())
-		{
-			// Create a unique identifier for the user
-			TSharedPtr<const FUniqueNetId> UserId = OnlineSub->GetIdentityInterface()->GetUniquePlayerId(0);
-
-			if (UserId.IsValid())
-			{
-				// Set up the session search settings
-				SessionSearch = MakeShareable(new FOnlineSessionSearch());
-				SessionSearch->bIsLanQuery = true;
-				SessionSearch->MaxSearchResults = 20;
-				SessionSearch->PingBucketSize = 50;
-
-				// Delegate for session search completion
-				OnFindSessionsCompleteDelegate = FOnFindSessionsCompleteDelegate::CreateUObject(this, &UShootingGameInstance::OnFindSessionsComplete);
-				Sessions->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
-
-				// Start the session search
-				Sessions->FindSessions(*UserId, SessionSearch.ToSharedRef());
-			}
-		}
-	}
 }
 
-void UShootingGameInstance::JoinOnlineGame()
+void UShootingGameInstance::JoinOnlineGame(FBlueprintSessionResult SessionResult)
 {
 	// Creating a local player where we can get the UserID from
 	ULocalPlayer* const LocalPlayer = GetFirstGamePlayer();
@@ -472,6 +407,9 @@ void UShootingGameInstance::JoinOnlineGame()
 	if (UniqueNetId.IsValid() == false)
 		return;
 
+	MyJoinSession(UniqueNetId, NAME_GameSession, SessionResult.OnlineResult);
+
+	/*
 	// Just a SearchResult where we can save the one we want to use, for the case we find more than one!
 	FOnlineSessionSearchResult SearchResult;
 
@@ -494,34 +432,6 @@ void UShootingGameInstance::JoinOnlineGame()
 				// here
 				MyJoinSession(UniqueNetId, NAME_GameSession, SearchResult);
 				break;
-			}
-		}
-	}
-
-	/*
-	// Get the Online Subsystem
-	IOnlineSubsystem* OnlineSub = IOnlineSubsystem::Get();
-
-	if (OnlineSub)
-	{
-		// Get the Session Interface
-		IOnlineSessionPtr Sessions = OnlineSub->GetSessionInterface();
-
-		if (Sessions.IsValid())
-		{
-			// Create a unique identifier for the user
-			TSharedPtr<const FUniqueNetId> UserId = OnlineSub->GetIdentityInterface()->GetUniquePlayerId(0);
-
-			if (UserId.IsValid())
-			{
-				// Delegate for session join completion
-				OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &UShootingGameInstance::OnJoinSessionComplete);
-				Sessions->AddOnJoinSessionCompleteDelegate_Handle(OnJoinSessionCompleteDelegate);
-
-
-				FOnlineSessionSearchResult& SessionResult = SessionSearch->SearchResults[0];
-				// Join the session
-				Sessions->JoinSession(*UserId, NAME_GameSession, SessionResult);
 			}
 		}
 	}
