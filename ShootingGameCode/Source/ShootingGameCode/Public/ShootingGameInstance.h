@@ -136,13 +136,13 @@ public:
 	FString CombineIPAndPort(const FString& IPAddress, int32 Port);
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
-	void StartOnlineGame(bool bIsLAN, int MaxNumPlayers);
+	void StartOnlineGame(bool bIsLAN, int MaxNumPlayers, FString Name = "PlayerName");
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void FindOnlineGames();
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
-	void JoinOnlineGame(FBlueprintSessionResult SessionResult);
+	void JoinOnlineGame(FBlueprintSessionResult SessionResult, FString Name = "PlayerName");
 
 	UFUNCTION(BlueprintCallable, Category = "Network|Test")
 	void DestroySessionAndLeaveGame();
@@ -159,6 +159,12 @@ public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable)
 	FSessionSearchResultDelegate Fuc_Dele_SearchResult;
 
+public:
+	FString PlayerName;
 
-	void SortTest();
+	UFUNCTION(BlueprintPure)
+	FString GetPlayerName() { return PlayerName; };
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerName(FString Name = "PlayerName") { PlayerName = Name; };
 };

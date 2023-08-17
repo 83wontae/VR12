@@ -19,6 +19,8 @@ UShootingGameInstance::UShootingGameInstance(const FObjectInitializer& ObjectIni
 
 	/** Bind function for DESTROYING a Session */
 	OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &UShootingGameInstance::OnDestroySessionComplete);
+
+	PlayerName = "UserName";
 }
 
 FST_Weapon* UShootingGameInstance::GetWeaponRowData(FName name)
@@ -131,7 +133,7 @@ void UShootingGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bW
 	// If the start was successful, we can open a NewMap if we want. Make sure to use "listen" as a parameter!
 	if (bWasSuccessful)
 	{
-		GetWorld()->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
+		GetWorld()->ServerTravel("/Game/ShootingGame/LobbyLevel?listen");
 		//UGameplayStatics::OpenLevel(GetWorld(), "ThirdPersonMap", true, "listen");
 	}
 }
@@ -344,7 +346,7 @@ FString UShootingGameInstance::CombineIPAndPort(const FString& IPAddress, int32 
 	return FString::Printf(TEXT("%s:%d"), *IPAddress, Port);
 }
 
-void UShootingGameInstance::StartOnlineGame(bool bIsLAN, int MaxNumPlayers)
+void UShootingGameInstance::StartOnlineGame(bool bIsLAN, int MaxNumPlayers, FString Name)
 {
 	// Creating a local player where we can get the UserID from
 	ULocalPlayer* const LocalPlayer = GetFirstGamePlayer();
@@ -362,6 +364,8 @@ void UShootingGameInstance::StartOnlineGame(bool bIsLAN, int MaxNumPlayers)
 	const FUniqueNetIdPtr UniqueNetId = IdentityInterface->GetUniquePlayerId(LocalPlayer->GetControllerId());
 	if (UniqueNetId.IsValid() == false)
 		return;
+
+	SetPlayerName(Name);
 
 	// Call our custom HostSession function. GameSessionName is a GameInstance variable
 	HostSession(UniqueNetId, NAME_GameSession, true, false, 4);
@@ -389,7 +393,7 @@ void UShootingGameInstance::FindOnlineGames()
 	FindSessions(UniqueNetId, true, true);
 }
 
-void UShootingGameInstance::JoinOnlineGame(FBlueprintSessionResult SessionResult)
+void UShootingGameInstance::JoinOnlineGame(FBlueprintSessionResult SessionResult, FString Name)
 {
 	// Creating a local player where we can get the UserID from
 	ULocalPlayer* const LocalPlayer = GetFirstGamePlayer();
@@ -407,6 +411,8 @@ void UShootingGameInstance::JoinOnlineGame(FBlueprintSessionResult SessionResult
 	const FUniqueNetIdPtr UniqueNetId = IdentityInterface->GetUniquePlayerId(LocalPlayer->GetControllerId());
 	if (UniqueNetId.IsValid() == false)
 		return;
+
+	SetPlayerName(Name);
 
 	MyJoinSession(UniqueNetId, NAME_GameSession, SessionResult.OnlineResult);
 
@@ -472,36 +478,4 @@ void UShootingGameInstance::Shutdown()
 
 void UShootingGameInstance::OnUpdateSearchResult_Implementation(const TArray<FBlueprintSessionResult>& SessionResults)
 {
-}
-
-void UShootingGameInstance::SortTest()
-{
-	TArray<AShootingPlayerState*> arrPS;
-
-	AShootingPlayerState* playerState1 = CreateDefaultSubobject<AShootingPlayerState>(TEXT("PlayerState1"));
-	playerState1->Kill = 4;
-	arrPS.Push(playerState1);
-
-	AShootingPlayerState* playerState2 = CreateDefaultSubobject<AShootingPlayerState>(TEXT("PlayerState2"));
-	playerState2->Kill = 1;
-	arrPS.Push(playerState2);
-
-	AShootingPlayerState* playerState3 = CreateDefaultSubobject<AShootingPlayerState>(TEXT("PlayerState3"));
-	playerState3->Kill = 10;
-	arrPS.Push(playerState3);
-
-	AShootingPlayerState* playerState4 = CreateDefaultSubobject<AShootingPlayerState>(TEXT("PlayerState4"));
-	playerState4->Kill = 7;
-	arrPS.Push(playerState4);
-
-	arrPS.Sort([](const AShootingPlayerState& A, const AShootingPlayerState& B) {
-		return A.Kill < B.Kill;
-	});
-
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("Sort Test"));
-
-	for (AShootingPlayerState* iter : arrPS)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Sort %s Kill : %d"), *iter->GetFName().ToString(), iter->Kill));
-	}
 }
